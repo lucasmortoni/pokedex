@@ -1,0 +1,23 @@
+{
+  "expo": {
+    "name": "Pokédex",
+    "slug": "mobile-pokedex",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "pokedex",
+    "userInterfaceStyle": "light",
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.pokedex.mobile"
+    },
+    "android": {
+      "package": "com.pokedex.mobile"
+    },
+    "plugins": [
+      "expo-router"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
