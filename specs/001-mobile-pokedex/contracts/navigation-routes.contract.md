@@ -16,8 +16,9 @@
 
 | Input Example | Normalized Result | Screen Behavior |
 | --- | --- | --- |
-| `"25"`, `"0025"`, `"#0025"` | `{ ok: true, lookupKey: "25", numericId: 25 }` | Loads species `#0025` (`Pikachu`) |
-| `"pikachu"`, `"  Pikachu  "`, `"mr-mime"` | `{ ok: true, lookupKey: "pikachu", numericId: null }` | Loads species by normalized slug |
+| `"25"`, `"0025"`, `"#0025"` | `{ ok: true, lookupKey: "25", numericId: 25, initialFormSlug: null }` | Loads species `#0025` (`Pikachu`) |
+| `"pikachu"`, `"  Pikachu  "`, `"mr-mime"` | `{ ok: true, lookupKey: "pikachu", numericId: null, initialFormSlug: null }` | Loads species by normalized slug |
+| `"raichu-alola"`, `"charizard-mega-x"` | `{ ok: true, lookupKey: "raichu", numericId: null, initialFormSlug: "raichu-alola" }` | Loads base species `#0026 Raichu` and preselects the `Alolan` form pill when present (falls back to `Default` if that suffix is invalid for an existing species, or `NOT_FOUND` if the base species does not exist) |
 | `"0"`, `"-5"`, `"9999"`, `""`, `"pikachu!!"` | `{ ok: false, reason: "INVALID_PARAM" }` | Renders immediate recoverable Not Found state with `Back to Pokédex` button (zero network call, zero crash) |
 | Valid-looking slug returning `404` (`"missingno"`) | `PokedexApiError('NOT_FOUND')` | Renders recoverable Not Found state with `Back to Pokédex` button |
 

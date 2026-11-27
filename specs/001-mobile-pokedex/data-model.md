@@ -40,7 +40,7 @@ export type EffectivenessMultiplier = 0 | 0.25 | 0.5 | 1 | 2 | 4;
 
 | Entity | Field | Type / Constraint | Notes |
 | --- | --- | --- | --- |
-| **PokemonBaseStats** | `hp`, `attack`, `defense`, `spAtk`, `spDef`, `speed` | `number` (`1..255`) | Individual canonical base stats |
+| **PokemonBaseStats** | `hp`, `attack`, `defense`, `spAtk`, `spDef`, `speed` | `number` (`1..255`) | Individual canonical base stats (visual bars scale against `255` max) |
 | | `total` | `number` | Exact sum of all 6 stats |
 | **PokemonAbility** | `slug` | `string` | Raw PokéAPI ability slug |
 | | `name` | `string` | Title-cased display name |
@@ -111,10 +111,11 @@ export type EffectivenessMultiplier = 0 | 0.25 | 0.5 | 1 | 2 | 4;
 2. **Search Query Parsing (`FR-003`, `FR-013`)**:
    - Trim whitespace and lowercase.
    - Strip leading `#` and leading zeros if query matches `/^#?0*(\d+)$/` (`#0025`, `0025`, `25` -> exact `id === 25`; `#0000` or `> 1025` -> empty match, never error).
-   - Otherwise perform case-insensitive substring match against normalized `name` or `slug` (ignoring punctuation differences like `mr mime` vs `mr-mime`).
+   - Otherwise normalize via Unicode NFKD diacritic stripping and non-alphanumeric folding (so queries like `flabebe`, `farfetchd`, `mr mime`, `type null`, or `nidoran` match `Flabébé`, `Farfetch'd`, `Mr. Mime`, `Type: Null`, and `Nidoran♀`/`Nidoran♂`) and perform a case-insensitive substring match against normalized `name` or `slug`.
    - Empty/whitespace-only query matches all catalog entries (subject to active filters).
 3. **Deep-Link / Route Parameter Validation (`FR-013`)**:
    - Accept numeric ID (`1..1025`) or sanitized lowercase slug (`^[a-z0-9-]+$`).
+   - If a slug matches a supported form suffix (`-alola`, `-galar`, `-hisui`, `-paldea`, `-mega`, `-mega-x`, `-mega-y`, `-gmax`), normalize to `{ lookupKey: baseSpeciesSlug, initialFormSlug }` so the base species opens with that form preselected (or falls back cleanly to `Default` / `NOT_FOUND` if the species does not exist).
    - Reject negative numbers, `0`, floats, IDs `> 1025`, or unknown slugs cleanly with a recoverable `NOT_FOUND` screen state.
 4. **Form Variant Filtering (`FR-001`, `FR-017`, Q1)**:
    - Include `is_default: true` plus regional (`-alola`, `-galar`, `-hisui`, `-paldea`), Mega (`-mega`, `-mega-x`, `-mega-y`), and Gigantamax (`-gmax`) varieties. Exclude cosmetic/totem duplicates unless explicitly matched by those form categories; if no alternate forms exist, `varieties.length <= 1` and the form selector is omitted.
@@ -132,7 +133,7 @@ export type EffectivenessMultiplier = 0 | 0.25 | 0.5 | 1 | 2 | 4;
    │ tap "Filters" button
    ▼
 [Open (draftFilters = clone(appliedFilters))]
-   ├── tap Type chip ──► toggle in draftTypes (max 2; FIFO or replace promptless cap at 2)
+   ├── tap Type chip ──► toggle in draftTypes (max 2; selecting a 3rd type replaces the oldest selected type in FIFO order)
    ├── tap Gen chip  ──► toggle draftGeneration
    ├── tap "Reset"   ──► draftTypes = [], draftGeneration = null (immediate preview count updates)
    ├── dismiss/backdrop ──► discard draftFilters ──► [Closed (appliedFilters unchanged)]
