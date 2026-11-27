@@ -146,7 +146,8 @@ Core capabilities:
 
 Technical choices:
 - Navigation: Use Expo Router (file-based navigation built on React Navigation) with typed routes (e.g., tab/stack navigation for catalog/collection and `/pokemon/[idOrName]` for detail screens) supporting deep linking and native back gestures.
-- Styling & Media: Use React Native `StyleSheet` with a centralized typed theme/token module, `react-native-safe-area-context` for safe-area insets on notched iOS/Android devices, `expo-image` for cached artwork/sprite rendering, and tuned `FlatList` virtualization for smooth 60fps scrolling.
+- UI Components & Styling: Use gluestack-ui styled with NativeWind (Tailwind CSS for React Native) and centralized theme tokens (including accessible color tokens for all 18 Pokémon types), using gluestack-ui primitives for mobile components (such as bottom sheets/Actionsheet for filters, badges, progress bars, inputs, and buttons), paired with `react-native-safe-area-context` for safe-area insets on notched iOS/Android devices.
+- Media & Lists: Use `expo-image` for cached artwork/sprite rendering and tuned `FlatList` virtualization for smooth 60fps scrolling.
 - UI references (Mobbin MCP): During Phase 0 (`research.md`), use the Mobbin MCP (`search_screens` / `search_flows` with `platform: "ios"`, searching one specific screen or pattern per query) to gather mobile UI references for:
   1. A browsable catalog grid/list screen with search and horizontal filter chips
   2. A filter bottom sheet with multi-select tags and clear/apply actions
@@ -311,6 +312,7 @@ When deciding whether Spec Kit fits your workflow, evaluate these points:
 - [GitHub Spec Kit Quickstart](https://github.github.com/spec-kit/quickstart.html)
 - [Spec Kit Repository & Docs (`github/spec-kit`)](https://github.com/github/spec-kit)
 - [Expo & Expo Router Documentation](https://docs.expo.dev/)
+- [gluestack-ui & NativeWind Documentation](https://gluestack.io/ui/docs/home/overview/introduction)
 - [Mobbin MCP Documentation](https://docs.mobbin.com/mcp/introduction)
 - [PokéAPI v2 Documentation](https://pokeapi.co/docs/v2) — Official REST API docs for `/pokemon`, `/pokemon-species`, `/evolution-chain`, `/type`, and `/generation` endpoints
 - Local workflow configuration in this repo: [`.specify/workflows/speckit/workflow.yml`](.specify/workflows/speckit/workflow.yml) and [`.specify/extensions.yml`](.specify/extensions.yml)
