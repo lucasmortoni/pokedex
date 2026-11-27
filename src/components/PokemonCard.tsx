@@ -28,13 +28,7 @@ function PokemonCardBase({
   const typeNames = pokemon.types.map((t) => getTypeToken(t).label).join(' and ');
 
   return (
-    <Pressable
-      testID={`pokemon-card-${pokemon.id}`}
-      accessibilityRole="button"
-      accessibilityLabel={`${pokemon.dexNumber} ${pokemon.name}, ${typeNames} type${
-        isCaught ? ', Caught' : ''
-      }${isFavorite ? ', Favorite' : ''}`}
-      onPress={() => onPress(pokemon)}
+    <View
       style={{
         backgroundColor: token.cardTint,
         borderColor: token.border,
@@ -48,9 +42,16 @@ function PokemonCardBase({
       />
 
       <View className="flex-row items-center justify-between">
-        <Text className="text-xs font-extrabold tracking-wide text-slate-700">
-          {pokemon.dexNumber}
-        </Text>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={`Open ${pokemon.name} ${pokemon.dexNumber}`}
+          onPress={() => onPress(pokemon)}
+          className="py-1 pr-2"
+        >
+          <Text className="text-xs font-extrabold tracking-wide text-slate-700">
+            {pokemon.dexNumber}
+          </Text>
+        </Pressable>
 
         <View className="flex-row items-center">
           <Pressable
@@ -61,10 +62,7 @@ function PokemonCardBase({
             }
             accessibilityState={{ selected: isCaught }}
             hitSlop={4}
-            onPress={(e) => {
-              e?.stopPropagation?.();
-              onToggleCaught(pokemon.id);
-            }}
+            onPress={() => onToggleCaught(pokemon.id)}
             className="min-h-[44px] min-w-[44px] items-center justify-center rounded-full"
           >
             {isCaught ? (
@@ -84,10 +82,7 @@ function PokemonCardBase({
             }
             accessibilityState={{ selected: isFavorite }}
             hitSlop={4}
-            onPress={(e) => {
-              e?.stopPropagation?.();
-              onToggleFavorite(pokemon.id);
-            }}
+            onPress={() => onToggleFavorite(pokemon.id)}
             className="min-h-[44px] min-w-[44px] items-center justify-center rounded-full"
           >
             <Heart
@@ -99,35 +94,45 @@ function PokemonCardBase({
         </View>
       </View>
 
-      <Text
-        numberOfLines={2}
-        className="mb-1.5 text-base font-bold text-slate-900"
+      <Pressable
+        testID={`pokemon-card-${pokemon.id}`}
+        accessibilityRole="button"
+        accessibilityLabel={`${pokemon.dexNumber} ${pokemon.name}, ${typeNames} type${
+          isCaught ? ', Caught' : ''
+        }${isFavorite ? ', Favorite' : ''}`}
+        onPress={() => onPress(pokemon)}
+        className="flex-1"
       >
-        {pokemon.name}
-      </Text>
+        <Text
+          numberOfLines={2}
+          className="mb-1.5 text-base font-bold text-slate-900"
+        >
+          {pokemon.name}
+        </Text>
 
-      <View className="mb-2 flex-row flex-wrap gap-1.5">
-        {pokemon.types.map((t) => (
-          <TypeBadge key={t} type={t} size="sm" />
-        ))}
-      </View>
+        <View className="mb-2 flex-row flex-wrap gap-1.5">
+          {pokemon.types.map((t) => (
+            <TypeBadge key={t} type={t} size="sm" />
+          ))}
+        </View>
 
-      <View className="mt-auto items-center justify-center pt-1">
-        {pokemon.spriteUrl ? (
-          <Image
-            source={{ uri: pokemon.spriteUrl }}
-            cachePolicy="memory-disk"
-            contentFit="contain"
-            accessibilityLabel={`${pokemon.name} artwork`}
-            style={{ width: 88, height: 88 }}
-          />
-        ) : (
-          <View className="h-[88px] w-[88px] items-center justify-center rounded-2xl bg-white/70">
-            <Text className="text-xs font-semibold text-slate-500">No Image</Text>
-          </View>
-        )}
-      </View>
-    </Pressable>
+        <View className="mt-auto items-center justify-center pt-1">
+          {pokemon.spriteUrl ? (
+            <Image
+              source={{ uri: pokemon.spriteUrl }}
+              cachePolicy="memory-disk"
+              contentFit="contain"
+              accessibilityLabel={`${pokemon.name} artwork`}
+              style={{ width: 88, height: 88 }}
+            />
+          ) : (
+            <View className="h-[88px] w-[88px] items-center justify-center rounded-2xl bg-white/70">
+              <Text className="text-xs font-semibold text-slate-500">No Image</Text>
+            </View>
+          )}
+        </View>
+      </Pressable>
+    </View>
   );
 }
 
